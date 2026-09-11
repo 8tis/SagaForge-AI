@@ -8,13 +8,15 @@
 </p>
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-amber.svg)](LICENSE)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-8tis%2FSagaForge--AI-181717?logo=github)](https://github.com/8tis/SagaForge-AI)
+[![Stars](https://img.shields.io/github/stars/8tis/SagaForge-AI?style=social)](https://github.com/8tis/SagaForge-AI)
 [![React 18](https://img.shields.io/badge/React-18-blue.svg)](https://react.dev/)
 [![Vite](https://img.shields.io/badge/Vite-6.0-purple.svg)](https://vitejs.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
 [![Express](https://img.shields.io/badge/Express-4.x-black.svg)](https://expressjs.com/)
 [![Bilingual](https://img.shields.io/badge/%E8%AF%AD%E8%A8%80-EN%20%7C%20%E4%B8%AD%E6%96%87-emerald.svg)](README.md)
 
-[**English**](README.md) | [**简体中文**](README_CN.md)
+[**English**](README.md) | [**简体中文**](README_CN.md) | [**GitHub 项目地址**](https://github.com/8tis/SagaForge-AI)
 
 </div>
 
@@ -27,6 +29,23 @@
 项目灵感汲取自《赛博徒步》硬核生存玩法、经典互动式游戏书（Gamebook）与跑团跑单机制，利用大语言模型让每一次抉择都产生真正的时空因果涟漪。
 
 与传统“回复多了页面无限向下变长”的文字冒险不同，SagaForge AI 首创了**电子书式单幕专注翻页机制**、**意境级 AI 场景绘画**、**突发机关随机解谜小游戏**以及**绝对零上云的浏览器本地私钥加密体系**。
+
+---
+
+## 📸 实机界面预览
+
+| 简体中文界面与世界观构建 | English Interface & World Setup |
+|:---:|:---:|
+| ![Chinese Start Screen](docs/images/start_screen_zh.png) | ![English Start Screen](docs/images/start_screen_en.png) |
+| *中英双语无缝切换、九大预设世界观与角色卡构建* | *Native English Narratives, Archetype Randomizer & Top Navigation* |
+
+<div align="center">
+
+### 💾 卡带存档与传记管理
+![Save & Load Management](docs/images/save_load_modal.png)
+*零上云本地存档槽位导出导入、便携式 JSON 世界观卡带、以及全篇冒险传记一键成书*
+
+</div>
 
 ---
 
@@ -114,8 +133,8 @@ sagaforge-ai/
 
 ### 1. 克隆项目并安装依赖
 ```bash
-git clone https://github.com/your-username/sagaforge-ai.git
-cd sagaforge-ai
+git clone https://github.com/8tis/SagaForge-AI.git
+cd SagaForge-AI
 npm install
 ```
 

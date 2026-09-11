@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 import { WorldGenre, UserProfile } from '../types';
 import { AppLanguage, I18N_TEXTS } from '../utils/i18n';
-import { Globe } from 'lucide-react';
+import { Globe, Github } from 'lucide-react';
 
 interface NavbarProps {
   currentWorld?: WorldGenre;
@@ -140,6 +140,18 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Right: Actions, Modals & User state */}
         <div className="flex items-center gap-1.5 sm:gap-2">
+          {/* GitHub Repo */}
+          <a
+            href="https://github.com/8tis/SagaForge-AI"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-amber-300 border border-zinc-700/80 hover:border-amber-500/40 transition-all cursor-pointer shadow-sm active:scale-95"
+            title="GitHub: 8tis/SagaForge-AI"
+          >
+            <Github className="w-3.5 h-3.5" />
+            <span className="hidden xl:inline font-mono text-[11px]">GitHub</span>
+          </a>
+
           {/* Language Switcher */}
           <button
             onClick={onToggleLanguage}

@@ -8,13 +8,15 @@
 </p>
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-amber.svg)](LICENSE)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-8tis%2FSagaForge--AI-181717?logo=github)](https://github.com/8tis/SagaForge-AI)
+[![Stars](https://img.shields.io/github/stars/8tis/SagaForge-AI?style=social)](https://github.com/8tis/SagaForge-AI)
 [![React 18](https://img.shields.io/badge/React-18-blue.svg)](https://react.dev/)
 [![Vite](https://img.shields.io/badge/Vite-6.0-purple.svg)](https://vitejs.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
 [![Express](https://img.shields.io/badge/Express-4.x-black.svg)](https://expressjs.com/)
 [![Bilingual](https://img.shields.io/badge/Language-EN%20%7C%20%E4%B8%AD%E6%96%87-emerald.svg)](#-internationalization--bilingual-support)
 
-[**English**](README.md) | [**简体中文**](README_CN.md)
+[**English**](README.md) | [**简体中文**](README_CN.md) | [**GitHub Repository**](https://github.com/8tis/SagaForge-AI)
 
 </div>
 
@@ -25,6 +27,23 @@
 **SagaForge AI** is an open-source, next-generation generative text adventure game engine and AI Game Master (GM) platform. Inspired by visual gamebooks and survival titles like *Cyberhiking*, SagaForge transforms large language models into a living, responsive universe.
 
 Unlike traditional text adventures that stretch endlessly into unreadable logs, SagaForge AI introduces a sleek **E-Book Style Focus Pagination system**, atmospheric **AI scene image diffusion**, procedurally generated **in-game puzzle mechanisms**, and **military-grade client-side API key encryption**.
+
+---
+
+## 📸 Screenshots Showcase
+
+| English Interface & World Setup | 简体中文界面与世界观设定 |
+|:---:|:---:|
+| ![English Start Screen](docs/images/start_screen_en.png) | ![Chinese Start Screen](docs/images/start_screen_zh.png) |
+| *Bilingual Support, Archetype Randomizer & Top Navigation* | *中英无缝切换、预设世界观与角色卡构建* |
+
+<div align="center">
+
+### 💾 Cartridge Archive & Save/Load Manager
+![Save & Load Management](docs/images/save_load_modal.png)
+*Cloudless local game saves, portable JSON story cartridges, and novella distillation*
+
+</div>
 
 ---
 
@@ -120,8 +139,8 @@ sagaforge-ai/
 
 ### 1. Clone & Install Dependencies
 ```bash
-git clone https://github.com/your-username/sagaforge-ai.git
-cd sagaforge-ai
+git clone https://github.com/8tis/SagaForge-AI.git
+cd SagaForge-AI
 npm install
 ```
 

@@ -3,6 +3,11 @@
   "description": "The Generative AI RPG & Living Text Adventure Engine with Scene Diffusion & Interactive Mini-Games",
   "private": true,
   "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/8tis/SagaForge-AI.git"
+  },
+  "homepage": "https://github.com/8tis/SagaForge-AI",
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",
