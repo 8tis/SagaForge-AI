@@ -2,6 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { StoryTurn, MiniGameChallenge, WorldGenre } from '../types';
 import { MiniGameWidget } from './MiniGameWidget';
 import {
+  AppLanguage,
+  I18N_TEXTS,
+  SURVIVAL_QUOTES_EN,
+  DEDUCTION_STAGES_EN,
+} from '../utils/i18n';
+import {
   Send,
   Sparkles,
   RotateCcw,
@@ -45,6 +51,7 @@ interface StoryDisplayProps {
   onRegenerateImage?: (turnIndex: number) => void;
   currentMiniGame?: MiniGameChallenge | null;
   worldGenre?: WorldGenre;
+  language?: AppLanguage;
 }
 
 // 《赛博徒步》与硬核生存经典箴言
@@ -82,7 +89,12 @@ export const StoryDisplay: React.FC<StoryDisplayProps> = ({
   onRegenerateImage,
   currentMiniGame,
   worldGenre = '仙侠',
+  language = 'zh',
 }) => {
+  const t = I18N_TEXTS[language] || I18N_TEXTS.zh;
+  const quotesList = language === 'en' ? SURVIVAL_QUOTES_EN : SURVIVAL_QUOTES;
+  const deductionStagesList = language === 'en' ? DEDUCTION_STAGES_EN : DEDUCTION_STAGES;
+
   const [customAction, setCustomAction] = useState('');
   const [copied, setCopied] = useState(false);
   const [previewImage, setPreviewImage] = useState<{
@@ -151,18 +163,18 @@ export const StoryDisplay: React.FC<StoryDisplayProps> = ({
     const timer = setInterval(() => {
       const sec = (Date.now() - start) / 1000;
       setElapsedTime(sec);
-      setStageIndex(Math.min(DEDUCTION_STAGES.length - 1, Math.floor(sec / 2.2)));
+      setStageIndex(Math.min(deductionStagesList.length - 1, Math.floor(sec / 2.2)));
     }, 100);
 
     const quoteTimer = setInterval(() => {
-      setQuoteIndex((prev) => (prev + 1) % SURVIVAL_QUOTES.length);
+      setQuoteIndex((prev) => (prev + 1) % quotesList.length);
     }, 3200);
 
     return () => {
       clearInterval(timer);
       clearInterval(quoteTimer);
     };
-  }, [isLoading]);
+  }, [isLoading, deductionStagesList.length, quotesList.length]);
 
   // Interactive dice rolling
   const rollDice = () => {
@@ -269,16 +281,16 @@ export const StoryDisplay: React.FC<StoryDisplayProps> = ({
                 disabled={focusTurnIndex <= 0}
                 onClick={() => setFocusTurnIndex((prev) => Math.max(0, prev - 1))}
                 className="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 disabled:opacity-30 disabled:cursor-not-allowed text-zinc-300 transition-colors flex items-center gap-1 text-xs cursor-pointer"
-                title="查看上一幕 (快捷键 ←)"
+                title={`${t.prevTurn} (←)`}
               >
                 <ChevronLeft className="w-4 h-4" />
-                <span className="hidden md:inline">上一幕</span>
+                <span className="hidden md:inline">{t.prevTurn}</span>
               </button>
 
               <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-zinc-950 border border-zinc-800 font-mono text-xs font-semibold shadow-inner">
-                <span className="text-amber-400">第 {currentTurn?.turnNumber || 1} 幕</span>
+                <span className="text-amber-400">{t.turnPrefix} {currentTurn?.turnNumber || 1} {t.turnSuffix}</span>
                 <span className="text-zinc-600">/</span>
-                <span className="text-zinc-400">{turns.length} 幕</span>
+                <span className="text-zinc-400">{t.turnTotal}{turns.length}{t.turnsLabel}</span>
               </div>
 
               <button
@@ -286,9 +298,9 @@ export const StoryDisplay: React.FC<StoryDisplayProps> = ({
                 disabled={isViewingLatest}
                 onClick={() => setFocusTurnIndex((prev) => Math.min(turns.length - 1, prev + 1))}
                 className="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 disabled:opacity-30 disabled:cursor-not-allowed text-zinc-300 transition-colors flex items-center gap-1 text-xs cursor-pointer"
-                title="查看下一幕 (快捷键 →)"
+                title={`${t.nextTurn} (→)`}
               >
-                <span className="hidden md:inline">下一幕</span>
+                <span className="hidden md:inline">{t.nextTurn}</span>
                 <ChevronRight className="w-4 h-4" />
               </button>
 
@@ -297,9 +309,9 @@ export const StoryDisplay: React.FC<StoryDisplayProps> = ({
                   type="button"
                   onClick={() => setFocusTurnIndex(turns.length - 1)}
                   className="ml-1 px-2.5 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-xs font-semibold border border-amber-500/40 transition-all active:scale-95 animate-pulse flex items-center gap-1 cursor-pointer"
-                  title="直接跳回最新的活动幕"
+                  title={t.jumpToLatest}
                 >
-                  <span>最新幕 ⚡</span>
+                  <span>{t.jumpToLatest}</span>
                 </button>
               )}
             </>
@@ -307,7 +319,7 @@ export const StoryDisplay: React.FC<StoryDisplayProps> = ({
             <div className="flex items-center gap-2 text-xs text-zinc-400 font-medium">
               <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-300 font-serif font-bold">
                 <Flame className="w-3.5 h-3.5 text-amber-400" />
-                <span>共 {turns.length} 幕长卷</span>
+                <span>{t.turnTotal} {turns.length} {t.turnsLabel}</span>
               </div>
             </div>
           )}
@@ -325,10 +337,10 @@ export const StoryDisplay: React.FC<StoryDisplayProps> = ({
                   ? 'bg-amber-500/20 text-amber-300 font-semibold shadow-sm'
                   : 'text-zinc-400 hover:text-zinc-200'
               }`}
-              title="单幕翻页模式：一页呈现当前幕次，告别无限长滚动"
+              title={t.focusMode}
             >
               <LayoutTemplate className="w-3.5 h-3.5" />
-              <span>翻页专注</span>
+              <span>{t.focusMode}</span>
             </button>
             <button
               type="button"
@@ -338,17 +350,17 @@ export const StoryDisplay: React.FC<StoryDisplayProps> = ({
                   ? 'bg-amber-500/20 text-amber-300 font-semibold shadow-sm'
                   : 'text-zinc-400 hover:text-zinc-200'
               }`}
-              title="折叠长卷模式：各幕时间轴折叠排布，可点击展开回顾"
+              title={t.timelineMode}
             >
               <Scroll className="w-3.5 h-3.5" />
-              <span>折叠长卷</span>
+              <span>{t.timelineMode}</span>
             </button>
           </div>
 
           <button
             onClick={handleCopyStory}
             className="p-1.5 rounded-lg bg-zinc-800/80 hover:bg-zinc-700 text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer"
-            title="复制全篇冒险文本"
+            title={t.copyStory}
           >
             {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
           </button>

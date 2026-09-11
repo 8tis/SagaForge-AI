@@ -287,17 +287,44 @@ app.post("/api/saves", (req: Request, res: Response) => {
 
 app.post("/api/adventure/start", async (req: Request, res: Response) => {
   try {
-    const { world, character, apiConfig } = req.body as {
+    const { world, character, language = "zh", apiConfig } = req.body as {
       world: string;
       character: string;
+      language?: "zh" | "en";
       apiConfig?: AIRequestConfig;
     };
 
     if (!world || !character) {
-      return res.status(400).json({ error: "请提供世界观设定与角色描述" });
+      return res.status(400).json({ error: language === "en" ? "Please provide world lore and character description" : "请提供世界观设定与角色描述" });
     }
 
-    const systemPrompt = `你是一个大师级互动文字冒险游戏主持人（GM）与奇幻小说作家。
+    const isEn = language === "en";
+
+    const systemPrompt = isEn
+      ? `You are a world-class interactive text RPG Game Master (GM) and dark fantasy/sci-fi author.
+Write in the second person ("You..."). Prose must be richly atmospheric, sensory, and emotionally gripping.
+Strictly adhere to the world lore and construct an electrifying prologue tailored to the protagonist's identity and traits.
+Design reasonable initial stats (hp: 100, mp: 80), starting equipment, acquired skills, inventory items, main quest line, and flags.
+Story text length: 180 to 350 English words. At the end, provide 3 to 4 profound, strategic choices for the next move.
+Must strictly and exclusively output a valid JSON object! Structure:
+{
+  "chapterTitle": "Prologue: Title of Scene",
+  "visualPrompt": "A vivid 25-word English visual scene description of environment, lighting, weather, camera angle and subject.",
+  "story": "Second-person immersive English narrative",
+  "options": ["Choice 1", "Choice 2", "Choice 3"],
+  "state": {
+    "hp": 100, "maxHp": 100,
+    "mp": 80, "maxMp": 80,
+    "equipment": ["Iron Longsword", "Worn Leather Cloak"],
+    "skills": ["Eagle Eye", "Sprint"],
+    "inventory": ["Rations (x3)", "Old Map"],
+    "quests": [{"id": "q1", "title": "Main Quest Name", "description": "Objective details", "status": "in_progress"}],
+    "flags": {"world": "${world}"}
+  },
+  "isEnding": false,
+  "endingType": "none"
+}`
+      : `你是一个大师级互动文字冒险游戏主持人（GM）与奇幻小说作家。
 必须使用第二人称叙事（“你……”），行文沉浸感强、文学张力丰沛，注重感官刻画。
 严格遵守世界观设定，根据角色的身份、特质与宿命生成专属于TA的震撼开局。
 设计合理的基础数值、初始装备、习得技能、物品栏、主线任务及命运印记。
@@ -321,7 +348,13 @@ app.post("/api/adventure/start", async (req: Request, res: Response) => {
   "endingType": "none"
 }`;
 
-    const userPrompt = `【开局启程】：
+    const userPrompt = isEn
+      ? `[Prologue Initiation]:
+- World Lore & Genre: ${world}
+- Protagonist Concept & Traits: ${character}
+
+Please immediately construct the opening act, grant the protagonist starting equipment, state attributes, quests, and tactical choices. Output strictly in JSON format.`
+      : `【开局启程】：
 - 故事世界观：${world}
 - 角色设定与特质：${character}
 
@@ -362,20 +395,36 @@ app.post("/api/adventure/start", async (req: Request, res: Response) => {
 
 app.post("/api/adventure/act", async (req: Request, res: Response) => {
   try {
-    const { world, character, historySummary, currentState, action, apiConfig } = req.body as {
+    const { world, character, historySummary, currentState, action, language = "zh", apiConfig } = req.body as {
       world: string;
       character: string;
       historySummary?: string;
       currentState: any;
       action: string;
+      language?: "zh" | "en";
       apiConfig?: AIRequestConfig;
     };
 
     if (!world || !character || !action) {
-      return res.status(400).json({ error: "缺少推动剧情所需的必要信息" });
+      return res.status(400).json({ error: language === "en" ? "Missing information required to advance narrative" : "缺少推动剧情所需的必要信息" });
     }
 
-    const systemPrompt = `你是一个大师级互动文字冒险游戏主持人（GM）。
+    const isEn = language === "en";
+
+    const systemPrompt = isEn
+      ? `You are a master interactive text RPG Game Master (GM).
+Second-person narrative ("You..."), tense, dynamic, and full of consequence.
+Strictly advance the story based on the player's choices or custom actions:
+- Meticulously describe the consequences of the action, environmental feedback, and unforeseen twists.
+- Dynamically adjust HP, MP/Energy, equipment, inventory items, and acquired skills.
+- Progress or conclude quests (quests: in_progress / completed / failed).
+- If player reaches an ultimate victory or tragic demise, set isEnding to true, endingType to victory/defeat/open. If game continues, provide 3-4 new tactical choices in English.
+- Include "visualPrompt": A vivid 25-word English visual scene description of environment, lighting, weather, camera angle, and subject.
+- [Sudden Encounter Mechanism]:
+  Mini-games do NOT occur every turn; they are spontaneous unexpected encounters/perils!
+  Only when this scene naturally triggers a lock, code cipher, algebraic seal, or tripwire mechanism, attach a "miniGame" field (password_lock, equation_puzzle, lockpick_qte, wire_circuit) with dynamic clues woven into the story in English!
+Story length: 180 to 350 English words. Strictly and solely output a valid JSON object!`
+      : `你是一个大师级互动文字冒险游戏主持人（GM）。
 第二人称叙事（“你……”），笔触紧凑生动，充满博弈感与戏剧性。
 严格根据玩家的选择或自定义行动推进故事：
 - 细致描写行动的结果、周围环境的反馈与意外事件。
@@ -396,7 +445,19 @@ app.post("/api/adventure/act", async (req: Request, res: Response) => {
   若本幕属于普通的交谈、赶路、常规战斗、客栈休整等未遭遇此类机关的情节，绝对不要附加 miniGame 字段（设为 undefined 或不返回）！
 故事长度在 250 至 450 字之间。必须且只能输出严格合法的 JSON 对象！`;
 
-    const userPrompt = `【剧情演进】：
+    const userPrompt = isEn
+      ? `[Story Progression]:
+- World Lore: ${world}
+- Protagonist: ${character}
+- Past Synopsis:
+${historySummary || "Stepping into peril; shadows gather."}
+- Current Stats:
+${JSON.stringify(currentState || {}, null, 2)}
+- Player's Decided Action:
+"${action}"
+
+Please evolve the narrative and update the player's status accordingly. Output strictly in JSON format.`
+      : `【剧情演进】：
 - 世界观：${world}
 - 主角设定：${character}
 - 前情提要：
@@ -464,21 +525,43 @@ app.post("/api/adventure/regenerate-image", async (req: Request, res: Response) 
 
 app.post("/api/adventure/biography", async (req: Request, res: Response) => {
   try {
-    const { world, character, turns, apiConfig } = req.body;
+    const { world, character, turns, language = "zh", apiConfig } = req.body;
     if (!Array.isArray(turns) || turns.length === 0) {
-      return res.status(400).json({ error: "没有足够的冒险记录可供编撰传记" });
+      return res.status(400).json({ error: language === "en" ? "Not enough adventure records to compile a biography" : "没有足够的冒险记录可供编撰传记" });
     }
 
+    const isEn = language === "en";
     const turnsSummary = turns
       .map(
         (t: any, idx: number) =>
-          `【第${idx + 1}幕 - ${t.chapterTitle || "历程"}】\n故事概要：${t.story.slice(0, 150)}...\n选择行动：${
-            t.selectedAction || "推进"
-          }`
+          isEn
+            ? `[Act ${idx + 1} - ${t.chapterTitle || "Chronicle"}]\nSummary: ${t.story.slice(0, 150)}...\nChosen Action: ${
+                t.selectedAction || "Advance"
+              }`
+            : `【第${idx + 1}幕 - ${t.chapterTitle || "历程"}】\n故事概要：${t.story.slice(0, 150)}...\n选择行动：${
+                t.selectedAction || "推进"
+              }`
       )
       .join("\n\n");
 
-    const systemPrompt = `你是一位享誉大陆的传奇史官与传记文学巨匠。
+    const systemPrompt = isEn
+      ? `You are a renowned royal chronicler and epic biographical novelist.
+Your mission is to distill the player's text adventure logs into an emotionally powerful, beautifully written 5-chapter novella.
+Write in an evocative, literary style in English.
+Strictly and solely output valid JSON:
+{
+  "title": "Epic Novella Title (e.g., 'Song of the Silver Moon and Broken Blade')",
+  "preface": "Preface or opening prose (approx. 60-80 English words)",
+  "chapters": [
+    { "chapterNumber": 1, "title": "Chapter I Title", "content": "120-180 words vivid story" },
+    { "chapterNumber": 2, "title": "Chapter II Title", "content": "120-180 words vivid story" },
+    { "chapterNumber": 3, "title": "Chapter III Title", "content": "120-180 words vivid story" },
+    { "chapterNumber": 4, "title": "Chapter IV Title", "content": "120-180 words vivid story" },
+    { "chapterNumber": 5, "title": "Chapter V Title (Finale/Epilogue)", "content": "120-180 words vivid story" }
+  ],
+  "epilogue": "Concluding epigraph and literary assessment (approx. 50-70 English words)"
+}`
+      : `你是一位享誉大陆的传奇史官与传记文学巨匠。
 你的任务是将玩家的文字冒险记录提炼、升华为一部文笔优美、荡气回肠的短篇传奇小说（分5个篇章）。
 请以具有史诗质感的第三人称或第一人称回忆体撰写，突出主角的坚韧、困境与抉择。
 必须且只能返回 JSON 格式：
@@ -495,7 +578,9 @@ app.post("/api/adventure/biography", async (req: Request, res: Response) => {
   "epilogue": "终卷题记与史诗评价（80字左右）"
 }`;
 
-    const userPrompt = `世界观：${world}
+    const userPrompt = isEn
+      ? `World Lore: ${world}\nProtagonist: ${character}\nAdventure Highlights:\n${turnsSummary}\n\nPlease weave this journey into a breathtaking 5-chapter biography novella. Output strictly in JSON format.`
+      : `世界观：${world}
 主角背景：${character}
 冒险历程摘要：
 ${turnsSummary}

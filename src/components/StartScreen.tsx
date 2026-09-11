@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { WorldGenre, GameCartridge } from '../types';
 import { WORLD_PRESETS, WorldPreset } from '../data/worlds';
+import { AppLanguage, I18N_TEXTS, WORLD_GENRES_EN } from '../utils/i18n';
 import {
   Sparkles,
   Dices,
@@ -20,6 +21,7 @@ interface StartScreenProps {
   onStartGame: (world: WorldGenre, character: string) => void;
   isLoading: boolean;
   hasConfiguredKey: boolean;
+  language?: AppLanguage;
   onOpenSettingsModal: () => void;
   onOpenCartridgeModal: () => void;
   onOpenSponsorModal: () => void;
@@ -56,13 +58,18 @@ export const StartScreen: React.FC<StartScreenProps> = ({
   onToggleCustomAction,
   activeCartridge,
   onClearActiveCartridge,
+  language = 'zh',
 }) => {
+  const t = I18N_TEXTS[language] || I18N_TEXTS.zh;
+
   const [selectedGenre, setSelectedGenre] = useState<WorldGenre>(
     activeCartridge?.genre || '仙侠'
   );
   const [characterDesc, setCharacterDesc] = useState<string>(
     activeCartridge?.characterPreset ||
-      '身懷上古殘缺銅鏡的外門雜役弟子，心思縝密，雖靈根駁雜但悟性奇高，正面臨宗門試煉的陰謀陷阱。'
+      (language === 'en'
+        ? 'A wandering spellblade exile bearing an ancient copper mirror, observant and sharp-minded, facing an impending conspiracy in the trials.'
+        : '身怀上古残缺铜镜的外门杂役弟子，心思缜密，虽灵根驳杂但悟性奇高，正面临宗门试炼的阴谋陷阱。')
   );
 
   const currentPreset: WorldPreset = WORLD_PRESETS[selectedGenre] || WORLD_PRESETS['奇幻'];
@@ -216,7 +223,7 @@ export const StartScreen: React.FC<StartScreenProps> = ({
           <div>
             <label className="block text-xs font-bold text-zinc-300 uppercase tracking-wider mb-2 flex items-center gap-2">
               <Compass className="w-4 h-4 text-amber-400" />
-              <span>選擇冒險世界觀</span>
+              <span>{t.chooseWorld}</span>
             </label>
             <div className="relative">
               <select
@@ -226,7 +233,9 @@ export const StartScreen: React.FC<StartScreenProps> = ({
               >
                 {WORLD_GENRES.map((genre) => (
                   <option key={genre} value={genre} className="bg-zinc-900 py-2">
-                    {WORLD_PRESETS[genre].name} ({genre})
+                    {language === 'en' && WORLD_GENRES_EN[genre]
+                      ? WORLD_GENRES_EN[genre].name
+                      : `${WORLD_PRESETS[genre].name} (${genre})`}
                   </option>
                 ))}
               </select>
@@ -238,12 +247,22 @@ export const StartScreen: React.FC<StartScreenProps> = ({
             {/* Selected World Lore Preview Card */}
             <div className="mt-3 p-3.5 rounded-2xl bg-zinc-950/60 border border-zinc-800/80 text-xs text-zinc-300">
               <div className="flex items-center justify-between font-semibold text-amber-300 mb-1">
-                <span>{currentPreset.tagline}</span>
+                <span>
+                  {language === 'en' && WORLD_GENRES_EN[selectedGenre]
+                    ? WORLD_GENRES_EN[selectedGenre].tagline
+                    : currentPreset.tagline}
+                </span>
                 <span className="text-[11px] px-2 py-0.5 rounded-md bg-zinc-800 text-zinc-400">
-                  能量體系：{currentPreset.energyName}
+                  {language === 'en'
+                    ? `System: ${WORLD_GENRES_EN[selectedGenre]?.energyName || currentPreset.energyName}`
+                    : `能量體系：${currentPreset.energyName}`}
                 </span>
               </div>
-              <p className="text-zinc-400 leading-relaxed">{currentPreset.description}</p>
+              <p className="text-zinc-400 leading-relaxed">
+                {language === 'en' && WORLD_GENRES_EN[selectedGenre]
+                  ? WORLD_GENRES_EN[selectedGenre].description
+                  : currentPreset.description}
+              </p>
             </div>
           </div>
 
@@ -252,16 +271,16 @@ export const StartScreen: React.FC<StartScreenProps> = ({
             <div className="flex items-center justify-between mb-2">
               <label className="text-xs font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-2">
                 <Wand2 className="w-4 h-4 text-amber-400" />
-                <span>主角設定與初始特質</span>
+                <span>{t.characterSetting}</span>
               </label>
               <button
                 type="button"
                 onClick={handleRandomize}
                 className="text-xs text-amber-400 hover:text-amber-300 flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-zinc-800 transition-colors"
-                title="隨機置換為另一名英雄預設"
+                title={language === 'en' ? 'Randomize character preset' : '隨機置換為另一名英雄預設'}
               >
                 <Dices className="w-3.5 h-3.5" />
-                <span>隨機骰出設定</span>
+                <span>{language === 'en' ? 'Randomize Hero' : '隨機骰出設定'}</span>
               </button>
             </div>
 
@@ -269,13 +288,13 @@ export const StartScreen: React.FC<StartScreenProps> = ({
               rows={4}
               value={characterDesc}
               onChange={(e) => setCharacterDesc(e.target.value)}
-              placeholder="例如：出身邊陲荒村的見習魔劍士，擁有看透幻象的重瞳，性格警惕戒備，隨身攜帶著父親遺留下來的斷刃與半卷密信..."
+              placeholder={t.customCharacterPlaceholder}
               className="w-full px-4 py-3 bg-zinc-950 border border-zinc-700/80 rounded-2xl text-zinc-100 text-xs sm:text-sm focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition-all placeholder-zinc-500 resize-none leading-relaxed"
             />
 
             {/* Quick Preset Chips */}
             <div className="mt-2 flex flex-wrap items-center gap-1.5">
-              <span className="text-[11px] text-zinc-500 mr-1">快捷原型：</span>
+              <span className="text-[11px] text-zinc-500 mr-1">{t.presetCharacters}：</span>
               {currentPreset.characterPresets.map((preset, idx) => (
                 <button
                   key={idx}
@@ -299,12 +318,12 @@ export const StartScreen: React.FC<StartScreenProps> = ({
               {isLoading ? (
                 <>
                   <div className="w-5 h-5 border-2 border-zinc-950 border-t-transparent rounded-full animate-spin" />
-                  <span>AI 大模型正在演算初始宿命與場景...</span>
+                  <span>{t.generatingWorld}</span>
                 </>
               ) : (
                 <>
                   <Sparkles className="w-5 h-5" />
-                  <span>啟程！開啟這場全新冒險</span>
+                  <span>{t.startAdventureBtn}</span>
                 </>
               )}
             </button>

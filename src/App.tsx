@@ -15,6 +15,7 @@ import { CartridgeModal } from './components/CartridgeModal';
 import { BiographyModal } from './components/BiographyModal';
 import { GuideWidget } from './components/GuideWidget';
 import { sanitizeApiConfig } from './utils/crypto';
+import { AppLanguage, getAppLanguage, setAppLanguage } from './utils/i18n';
 import {
   WorldGenre,
   AdventureSession,
@@ -64,6 +65,15 @@ export default function App() {
 
   // 3. User & Auth
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
+
+  // 3.1 Internationalization Language
+  const [language, setLanguage] = useState<AppLanguage>(getAppLanguage);
+
+  const handleToggleLanguage = () => {
+    const next = language === 'zh' ? 'en' : 'zh';
+    setLanguage(next);
+    setAppLanguage(next);
+  };
 
   // 4. API Config
   const [apiConfig, setApiConfig] = useState<ApiConfig>(() => {
@@ -255,6 +265,7 @@ export default function App() {
         body: JSON.stringify({
           world,
           character,
+          language,
           apiConfig: sanitizeApiConfig(apiConfig),
         }),
       });
@@ -341,6 +352,7 @@ export default function App() {
           historySummary,
           currentState: session.currentState,
           action: actionText,
+          language,
           apiConfig: sanitizeApiConfig(apiConfig),
         }),
       });
@@ -467,6 +479,8 @@ export default function App() {
         turnCount={session?.turns.length || 0}
         hasConfiguredKey={hasConfiguredKey}
         currentUser={currentUser}
+        language={language}
+        onToggleLanguage={handleToggleLanguage}
         onOpenSettingsModal={() => setIsSettingsOpen(true)}
         onOpenSponsorModal={() => setIsSponsorOpen(true)}
         onOpenSaveModal={() => setIsSaveOpen(true)}
@@ -506,6 +520,7 @@ export default function App() {
             onStartGame={handleStartGame}
             isLoading={isLoading}
             hasConfiguredKey={hasConfiguredKey}
+            language={language}
             onOpenSettingsModal={() => setIsSettingsOpen(true)}
             onOpenCartridgeModal={() => setIsCartridgeOpen(true)}
             onOpenSponsorModal={() => setIsSponsorOpen(true)}
@@ -555,6 +570,7 @@ export default function App() {
                 onRegenerateImage={handleRegenerateImage}
                 currentMiniGame={session.currentMiniGame}
                 worldGenre={session.world}
+                language={language}
               />
             </div>
 
@@ -659,6 +675,7 @@ export default function App() {
           worldGenre={session.world}
           characterDesc={session.characterDescription}
           apiConfig={apiConfig}
+          language={language}
         />
       )}
     </div>

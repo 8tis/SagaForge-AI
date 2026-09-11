@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { BookOpen, Sparkles, Copy, Check, Download, RotateCcw, X } from 'lucide-react';
 import { StoryTurn, BiographyData, ApiConfig } from '../types';
 import { sanitizeApiConfig } from '../utils/crypto';
+import { AppLanguage } from '../utils/i18n';
 
 interface BiographyModalProps {
   isOpen: boolean;
@@ -10,6 +11,7 @@ interface BiographyModalProps {
   worldGenre: string;
   characterDesc: string;
   apiConfig: ApiConfig;
+  language?: AppLanguage;
 }
 
 export const BiographyModal: React.FC<BiographyModalProps> = ({
@@ -19,6 +21,7 @@ export const BiographyModal: React.FC<BiographyModalProps> = ({
   worldGenre,
   characterDesc,
   apiConfig,
+  language = 'zh',
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [biography, setBiography] = useState<BiographyData | null>(null);
@@ -29,7 +32,7 @@ export const BiographyModal: React.FC<BiographyModalProps> = ({
 
   const handleGenerate = async () => {
     if (turns.length === 0) {
-      setErrorMsg('當前尚無冒險歷程，請先進行幾個回合的遊戲再編撰傳記。');
+      setErrorMsg(language === 'en' ? 'No adventure records yet. Play a few acts before compiling your biography.' : '当前尚无冒险历程，请先进行几个回合的游戏再编撰传记。');
       return;
     }
 
@@ -44,6 +47,7 @@ export const BiographyModal: React.FC<BiographyModalProps> = ({
           world: worldGenre,
           character: characterDesc,
           turns,
+          language,
           apiConfig: sanitizeApiConfig(apiConfig),
         }),
       });
