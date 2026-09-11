@@ -1,0 +1,92 @@
+{
+  "adminConfig": {
+    "adminPasswordHash": "ac0e7d037817094e9e0b4441f9bae3209d67b02fa484917065f71b16109a1a78",
+    "siteTitle": "AI 文字冒險遊戲產生器",
+    "announcement": "🌟 歡迎來到文字冒險世界！支援自由配置第三方 API（DeepSeek / OpenRouter / OpenAI 等）與 Google Gemini，可自由匯入匯出遊戲進度！",
+    "sponsorQrUrl": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=400&q=80",
+    "sponsorLink": "https://buymeacoffee.com/arvincreator",
+    "sponsorTitle": "贊助開發者，解鎖專屬冒險特權",
+    "sponsorNotice": "贊助完成後，可在下方輸入發放的【贊助碼】即時啟動贊助會員或「自訂動作 DLC」權限！",
+    "defaultProvider": "openai",
+    "defaultApiBase": "https://api.deepseek.com/v1",
+    "defaultApiKey": "",
+    "defaultModel": "deepseek-chat",
+    "defaultTemperature": 0.8
+  },
+  "users": [
+    {
+      "id": "usr_demo_admin",
+      "email": "admin@rpg.com",
+      "nickname": "首席GM管理者",
+      "passwordHash": "ac0e7d037817094e9e0b4441f9bae3209d67b02fa484917065f71b16109a1a78",
+      "isVip": true,
+      "hasCustomActionDlc": true,
+      "createdAt": 1789117918607,
+      "redeemedCodes": [
+        "INITIAL_ADMIN"
+      ]
+    },
+    {
+      "id": "usr_1789117931706_xsdsi",
+      "email": "player1@test.com",
+      "nickname": "测试英雄",
+      "passwordHash": "ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f",
+      "isVip": true,
+      "hasCustomActionDlc": true,
+      "createdAt": 1789117931706,
+      "redeemedCodes": [
+        "VIP-HERO-8888",
+        "DLC-02CD9EE5"
+      ]
+    }
+  ],
+  "sponsorCodes": [
+    {
+      "code": "VIP-HERO-8888",
+      "type": "vip",
+      "isUsed": true,
+      "createdAt": 1789117918607,
+      "note": "新手贊助會員體驗碼",
+      "usedAt": 1789117931714,
+      "usedByEmail": "player1@test.com"
+    },
+    {
+      "code": "DLC-ACTION-9999",
+      "type": "custom_action_dlc",
+      "isUsed": false,
+      "createdAt": 1789117918607,
+      "note": "自訂動作DLC激活碼"
+    },
+    {
+      "code": "ALL-ACCESS-VIP",
+      "type": "all_access",
+      "isUsed": false,
+      "createdAt": 1789117918607,
+      "note": "全功能解鎖神聖通行碼"
+    },
+    {
+      "code": "DLC-02CD9EE5",
+      "type": "custom_action_dlc",
+      "isUsed": true,
+      "createdAt": 1789117935122,
+      "note": "活动赠送DLC",
+      "usedAt": 1789117938192,
+      "usedByEmail": "player1@test.com"
+    },
+    {
+      "code": "DLC-8756D170",
+      "type": "custom_action_dlc",
+      "isUsed": false,
+      "createdAt": 1789117935122,
+      "note": "活动赠送DLC"
+    },
+    {
+      "code": "DLC-A8AB187B",
+      "type": "custom_action_dlc",
+      "isUsed": false,
+      "createdAt": 1789117935122,
+      "note": "活动赠送DLC"
+    }
+  ],
+  "cloudSaves": {}
+}

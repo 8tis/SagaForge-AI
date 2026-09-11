@@ -1,0 +1,6 @@
+{
+  "name": "文字冒险游戏生成器",
+  "description": "基于 Google Gemini API 的沉浸式文字冒险游戏生成器，支持多世界观设定与三栏式动态状态面板。",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
